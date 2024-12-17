@@ -7,6 +7,7 @@
 [![Docker](https://img.shields.io/badge/Docker-Supported-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![Deployment](https://img.shields.io/badge/Deployment-Portainer-blue)](https://www.portainer.io/)
 [![wakatime](https://wakatime.com/badge/user/677681b3-49a8-4ab2-a967-cffb857c9d96/project/8082dc88-9c23-4e1e-90d2-74b5d4e59744.svg)](https://wakatime.com/badge/user/677681b3-49a8-4ab2-a967-cffb857c9d96/project/8082dc88-9c23-4e1e-90d2-74b5d4e59744)
+
 Eine moderne Web-Anwendung zum Zusammenfügen von PDF-Dateien, entwickelt mit React und Vite.
 
 ## 🔒 Datenschutz & Sicherheit
