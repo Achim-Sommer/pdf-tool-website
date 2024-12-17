@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import { FaGithub } from 'react-icons/fa';
 import UploadZone from './components/UploadZone';
 import FileList from './components/FileList';
@@ -157,6 +157,10 @@ function App() {
   const [selectedPages, setSelectedPages] = useState({});
   const [compressionLevel, setCompressionLevel] = useState('medium');
 
+  // DIN A4 dimensions in points
+  const A4_WIDTH = 595.28;
+  const A4_HEIGHT = 841.89;
+
   // Dark Mode Detection
   useEffect(() => {
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -168,11 +172,41 @@ function App() {
     return () => darkModeMediaQuery.removeEventListener('change', handleThemeChange);
   }, []);
 
+  const scaleImageToFitA4 = (imageWidth, imageHeight) => {
+    const pageAspectRatio = A4_WIDTH / A4_HEIGHT;
+    const imageAspectRatio = imageWidth / imageHeight;
+
+    let newWidth, newHeight;
+
+    if (imageAspectRatio > pageAspectRatio) {
+      // Image is wider relative to A4, so width will be the limiting factor
+      newWidth = A4_WIDTH;
+      newHeight = newWidth / imageAspectRatio;
+    } else {
+      // Image is taller relative to A4, so height will be the limiting factor
+      newHeight = A4_HEIGHT;
+      newWidth = newHeight * imageAspectRatio;
+    }
+
+    return { newWidth, newHeight };
+  };
+
   const handleFilesAdded = async (newFiles) => {
-    const pdfFiles = Array.from(newFiles).filter(file => file.type === 'application/pdf');
+    const pdfFiles = [];
+    const imageFiles = [];
+
+    Array.from(newFiles).forEach(file => {
+      if (file.type === 'application/pdf') {
+        pdfFiles.push(file);
+      } else if (file.type.startsWith('image/')) {
+        imageFiles.push(file);
+      }
+    });
+
+    // Add PDF files to the list
     setFiles(prevFiles => [...prevFiles, ...pdfFiles]);
-    
-    // Initialize selected pages for each new file
+
+    // Initialize selected pages for each new PDF file
     for (const file of pdfFiles) {
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await PDFDocument.load(arrayBuffer);
@@ -180,6 +214,54 @@ function App() {
       setSelectedPages(prev => ({
         ...prev,
         [file.name]: Array.from({ length: pageCount }, (_, i) => i)
+      }));
+    }
+
+    // Convert image files to PDF pages
+    for (const imageFile of imageFiles) {
+      const imageBytes = await imageFile.arrayBuffer();
+      const pdfDoc = await PDFDocument.create();
+      
+      // Support different image types
+      let image;
+      if (imageFile.type === 'image/png') {
+        image = await pdfDoc.embedPng(imageBytes);
+      } else if (imageFile.type === 'image/jpeg') {
+        image = await pdfDoc.embedJpg(imageBytes);
+      } else {
+        console.error('Unsupported image type');
+        continue;
+      }
+
+      // Scale image to fit A4
+      const { newWidth, newHeight } = scaleImageToFitA4(image.width, image.height);
+
+      // Create A4 page
+      const page = pdfDoc.addPage([A4_WIDTH, A4_HEIGHT]);
+
+      // Calculate position to center the image
+      const x = (A4_WIDTH - newWidth) / 2;
+      const y = (A4_HEIGHT - newHeight) / 2;
+
+      // Draw image centered on A4 page
+      page.drawImage(image, {
+        x: x,
+        y: y,
+        width: newWidth,
+        height: newHeight,
+      });
+
+      const pdfBytes = await pdfDoc.save();
+      const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const pdfFile = new File([pdfBlob], imageFile.name, { type: 'application/pdf' });
+      
+      // Add converted PDF to files
+      setFiles(prevFiles => [...prevFiles, pdfFile]);
+
+      // Initialize page selection for converted image PDFs
+      setSelectedPages(prev => ({
+        ...prev,
+        [imageFile.name]: [0] // Select the first (and only) page
       }));
     }
   };
@@ -275,7 +357,7 @@ function App() {
       <Header theme={theme}>
         <HeaderContent>
           <Title>PDF Dateien zusammenfügen</Title>
-          <Subtitle>Laden Sie Ihre PDF-Dateien hoch und fügen Sie diese zu einem Dokument zusammen</Subtitle>
+          <Subtitle>Laden Sie Ihre PDF-, PNG- und JPEG-Dateien hoch und fügen Sie diese zu einem Dokument zusammen</Subtitle>
         </HeaderContent>
       </Header>
       

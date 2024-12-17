@@ -194,14 +194,14 @@ const UploadZone = ({ onFilesAdded, theme }) => {
         <line x1="12" y1="3" x2="12" y2="15"/>
       </UploadIcon>
       
-      <UploadText theme={theme}>PDF-Dateien hier ablegen</UploadText>
+      <UploadText theme={theme}>Dateien hier ablegen</UploadText>
       <UploadSubtext theme={theme}>oder wählen Sie Dateien von Ihrem Computer aus</UploadSubtext>
       
       <FileInput
         type="file"
         id="fileInput"
         multiple
-        accept=".pdf"
+        accept=".pdf, .png, .jpeg"
         onChange={handleFileInput}
       />
       <UploadButton htmlFor="fileInput">
@@ -209,7 +209,7 @@ const UploadZone = ({ onFilesAdded, theme }) => {
       </UploadButton>
 
       <AcceptedFormats theme={theme}>
-        Akzeptierte Formate: PDF
+        Akzeptierte Formate: PDF, PNG, JPEG
       </AcceptedFormats>
     </DropZone>
   );
