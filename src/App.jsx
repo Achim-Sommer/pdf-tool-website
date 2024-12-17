@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { PDFDocument } from 'pdf-lib';
+import { FaGithub } from 'react-icons/fa';
 import UploadZone from './components/UploadZone';
 import FileList from './components/FileList';
 import ProgressBar from './components/ProgressBar';
@@ -11,6 +12,8 @@ const AppContainer = styled.div`
   background-color: ${props => props.theme === 'dark' ? '#1a1a1a' : '#f5f5f5'};
   color: ${props => props.theme === 'dark' ? '#ffffff' : '#000548'};
   transition: background-color 0.3s ease, color 0.3s ease;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.header`
@@ -69,6 +72,7 @@ const Container = styled.div`
   max-width: 800px;
   margin: 2rem auto;
   padding: 0 1rem;
+  flex: 1;
 `;
 
 const ContentSection = styled.section`
@@ -109,6 +113,38 @@ const MergeButton = styled.button`
   &:not(:disabled):active {
     transform: translateY(0);
     box-shadow: 0 4px 6px rgba(235, 0, 60, 0.2);
+  }
+`;
+
+const Footer = styled.footer`
+  width: 100%;
+  background: ${props => props.theme === 'dark' 
+    ? 'linear-gradient(135deg, #333 0%, #1a1a1a 100%)'
+    : 'linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%)'};
+  color: ${props => props.theme === 'dark' ? '#ffffff' : '#000548'};
+  text-align: center;
+  padding: 1.5rem 0;
+  border-top: 2px solid ${props => props.theme === 'dark' ? '#444' : '#ccc'};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+`;
+
+const FooterLink = styled.a`
+  color: ${props => props.theme === 'dark' ? '#4da6ff' : '#0066cc'};
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &:hover {
+    color: ${props => props.theme === 'dark' ? '#80bfff' : '#3399ff'};
   }
 `;
 
@@ -284,6 +320,13 @@ function App() {
           </MergeButton>
         </ContentSection>
       </Container>
+
+      <Footer theme={theme}>
+        Made by Achim Sommer | 
+        <FooterLink href="https://github.com/Achim-Sommer/pdf-tool-website" target="_blank" rel="noopener noreferrer">
+          <FaGithub /> GitHub Repository
+        </FooterLink>
+      </Footer>
     </AppContainer>
   );
 }
