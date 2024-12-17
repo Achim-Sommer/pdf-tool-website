@@ -92,6 +92,10 @@ pdf-tool-website/
 - pdf-lib Updates für neue PDF-Funktionalitäten beachten
 - Browser-Kompatibilität regelmäßig prüfen
 
+## 🌐 Testseite
+
+Eine Testseite der Anwendung ist verfügbar unter [pdf.achimsommer.com](http://pdf.achimsommer.com).
+
 ## 📝 Lizenz
 
 Dieses Projekt ist unter der MIT-Lizenz lizenziert - siehe die [LICENSE](LICENSE) Datei für Details.
