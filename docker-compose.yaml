@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:80" # Ändere den externen Port auf 8080
+      - "9090:80" # Ändere den externen Port auf 8080
     environment:
       NODE_ENV: production
     restart: always
