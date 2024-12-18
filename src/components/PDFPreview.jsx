@@ -3,8 +3,8 @@ import styled from '@emotion/styled';
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
-// PDF.js Worker lokal laden
-pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.min.js';
+// PDF.js Worker lokal laden 
+pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.min.mjs';
 
 const PreviewContainer = styled.div`
   margin: 2rem 0;
