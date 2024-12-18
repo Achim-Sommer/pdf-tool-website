@@ -13,6 +13,8 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@hello-pangea/dnd": "^17.0.0",
+    "heic-convert": "^2.1.0",
+    "heic2any": "^0.0.4",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^4.9.155",
     "react": "^18.3.1",

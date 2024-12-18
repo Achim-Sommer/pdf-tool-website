@@ -20,7 +20,7 @@ Eine moderne Web-Anwendung zum Zusammenfügen von PDF-Dateien, entwickelt mit Re
 
 - Drag & Drop Upload von PDF-Dateien
 - Mehrere PDF-Dateien gleichzeitig auswählbar
-- PNG und JPEG Dateien können ebenfalls verwendet werden
+- PNG, HEIC und JPEG Dateien können ebenfalls verwendet werden
 - Automatische Skalierung von Bildern auf DIN A4-Format
 - Moderne, intuitive Benutzeroberfläche
 - Echtzeit-Fortschrittsanzeige
@@ -41,6 +41,7 @@ Eine moderne Web-Anwendung zum Zusammenfügen von PDF-Dateien, entwickelt mit Re
   - PDF
   - PNG
   - JPEG
+  - HEIC
 
 - **Bildkonvertierung**:
   - Automatische Konvertierung von Bildern in PDF-Seiten

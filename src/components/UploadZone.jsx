@@ -205,7 +205,7 @@ const UploadZone = ({ onFilesAdded, theme }) => {
         type="file"
         id="fileInput"
         multiple
-        accept=".pdf, .png, .jpeg"
+        accept=".pdf, .png, .jpeg, .jpg, .heic"
         onChange={handleFileInput}
       />
       <UploadButton htmlFor="fileInput">
@@ -213,7 +213,7 @@ const UploadZone = ({ onFilesAdded, theme }) => {
       </UploadButton>
 
       <AcceptedFormats theme={theme}>
-        Akzeptierte Formate: PDF, PNG, JPEG
+        Akzeptierte Formate: PDF, PNG, JPEG, HEIC
       </AcceptedFormats>
     </DropZone>
   );

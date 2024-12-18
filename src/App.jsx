@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import { FaGithub } from 'react-icons/fa';
+import heic2any from 'heic2any';
 import UploadZone from './components/UploadZone';
 import FileList from './components/FileList';
 import ProgressBar from './components/ProgressBar';
@@ -191,19 +192,50 @@ function App() {
     return { newWidth, newHeight };
   };
 
-  const handleFilesAdded = async (newFiles) => {
+const handleFilesAdded = async (newFiles) => {
     const pdfFiles = [];
     const imageFiles = [];
+    const unsupportedFiles = [];
 
-    Array.from(newFiles).forEach(file => {
+    // Convert HEIC files to JPEG
+    const convertHeicToJpeg = async (heicFile) => {
+      try {
+        const jpegBlob = await heic2any({
+          blob: heicFile,
+          toType: 'image/jpeg',
+          quality: 0.7
+        });
+        return new File([jpegBlob], heicFile.name.replace(/\.heic$/i, '.jpg'), { type: 'image/jpeg' });
+      } catch (error) {
+        console.error('HEIC Conversion Error:', error);
+        return null;
+      }
+    };
+
+    for (const file of newFiles) {
       if (file.type === 'application/pdf') {
         pdfFiles.push(file);
       } else if (file.type.startsWith('image/')) {
-        imageFiles.push(file);
+        if (file.name.toLowerCase().endsWith('.heic')) {
+          const jpegFile = await convertHeicToJpeg(file);
+          if (jpegFile) {
+            imageFiles.push(jpegFile);
+          } else {
+            unsupportedFiles.push(file);
+          }
+        } else {
+          imageFiles.push(file);
+        }
       }
-    });
+    }
 
-    // Add PDF files to the list
+    // Zeige Benachrichtigung für nicht konvertierbare HEIC-Dateien
+    if (unsupportedFiles.length > 0) {
+      const fileNames = unsupportedFiles.map(f => f.name).join(', ');
+      alert(`Konvertierung der HEIC-Dateien fehlgeschlagen: ${fileNames}. Bitte konvertieren Sie diese manuell in JPEG oder PNG.`);
+    }
+
+    // Restlicher Code bleibt unverändert...
     setFiles(prevFiles => [...prevFiles, ...pdfFiles]);
 
     // Initialize selected pages for each new PDF file
