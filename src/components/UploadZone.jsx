@@ -213,7 +213,7 @@ const UploadZone = ({ onFilesAdded, theme }) => {
       </UploadButton>
 
       <AcceptedFormats theme={theme}>
-        Akzeptierte Formate: PDF, PNG, JPEG, HEIC
+        Akzeptierte Formate: PDF, PNG, JPEG, JPG, HEIC
       </AcceptedFormats>
     </DropZone>
   );

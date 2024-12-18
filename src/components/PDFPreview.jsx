@@ -24,7 +24,7 @@ const PreviewTitle = styled.h3`
   font-size: 1.2rem;
 `;
 
-const PDFList = styled.div`
+const PreviewList = styled.div`
   display: flex;
   flex-direction: row;
   gap: 1rem;
@@ -48,7 +48,7 @@ const PDFList = styled.div`
   }
 `;
 
-const PDFCard = styled.div`
+const PreviewCard = styled.div`
   flex: 0 0 auto;
   width: 250px; // Etwas breiter
   background: ${props => props.theme === 'dark' ? '#2d2d2d' : 'white'};
@@ -66,13 +66,6 @@ const PDFCard = styled.div`
   &.dragging {
     opacity: 0.5;
   }
-`;
-
-const PreviewCanvas = styled.canvas`
-  width: 100%;
-  height: auto;
-  margin-bottom: 1rem;
-  border-radius: 4px;
 `;
 
 const PageSelector = styled.div`
@@ -143,28 +136,44 @@ const PDFPreview = ({ files, selectedPages, onPageSelection, onReorder, theme })
 
       for (const file of files) {
         try {
-          const arrayBuffer = await file.arrayBuffer();
-          const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-          const page = await pdf.getPage(1);
-          const viewport = page.getViewport({ scale: 0.5 });
+          if (file.type.startsWith('application/pdf')) {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            const page = await pdf.getPage(1);
+            const viewport = page.getViewport({ scale: 0.5 });
 
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
 
-          await page.render({
-            canvasContext: context,
-            viewport: viewport
-          }).promise;
+            await page.render({
+              canvasContext: context,
+              viewport: viewport
+            }).promise;
 
-          newPreviews[file.name] = {
-            dataUrl: canvas.toDataURL(),
-            pageCount: pdf.numPages
-          };
+            newPreviews[file.name] = {
+              dataUrl: canvas.toDataURL(),
+              pageCount: pdf.numPages,
+              type: 'pdf'
+            };
+          } else if (file.type.startsWith('image/')) {
+            const dataUrl = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = (e) => resolve(e.target.result);
+              reader.onerror = reject;
+              reader.readAsDataURL(file);
+            });
+
+            newPreviews[file.name] = {
+              dataUrl: dataUrl,
+              pageCount: 1,
+              type: 'image'
+            };
+          }
         } catch (error) {
           console.error('Fehler beim Laden der Vorschau:', error);
-          setError('Fehler beim Laden der PDF-Vorschau. Bitte versuchen Sie es erneut.');
+          setError('Fehler beim Laden der Vorschau. Bitte versuchen Sie es erneut.');
         }
       }
 
@@ -197,7 +206,7 @@ const PDFPreview = ({ files, selectedPages, onPageSelection, onReorder, theme })
     return (
       <PreviewContainer theme={theme}>
         <LoadingMessage theme={theme}>
-          Lade PDF Vorschauen...
+          Lade Vorschauen...
         </LoadingMessage>
       </PreviewContainer>
     );
@@ -205,12 +214,12 @@ const PDFPreview = ({ files, selectedPages, onPageSelection, onReorder, theme })
 
   return (
     <PreviewContainer theme={theme}>
-      <PreviewTitle theme={theme}>PDF Vorschau und Seitenauswahl</PreviewTitle>
+      <PreviewTitle theme={theme}>Vorschau und Seitenauswahl</PreviewTitle>
       {error && <ErrorMessage>{error}</ErrorMessage>}
       <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="pdf-list" direction="horizontal">
+        <Droppable droppableId="preview-list" direction="horizontal">
           {(provided) => (
-            <PDFList
+            <PreviewList
               {...provided.droppableProps}
               ref={provided.innerRef}
               theme={theme}
@@ -222,7 +231,7 @@ const PDFPreview = ({ files, selectedPages, onPageSelection, onReorder, theme })
                   index={index}
                 >
                   {(provided, snapshot) => (
-                    <PDFCard
+                    <PreviewCard
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
@@ -233,30 +242,32 @@ const PDFPreview = ({ files, selectedPages, onPageSelection, onReorder, theme })
                         <img
                           src={previews[file.name].dataUrl}
                           alt={`Vorschau von ${file.name}`}
-                          style={{ width: '100%', borderRadius: '4px' }}
+                          style={{ width: '100%', borderRadius: '4px', maxHeight: '250px', objectFit: 'contain' }}
                         />
                       )}
-                      <PageSelector theme={theme}>
-                        {previews[file.name] && Array.from(
-                          { length: previews[file.name].pageCount },
-                          (_, i) => (
-                            <PageCheckbox key={i} theme={theme}>
-                              <input
-                                type="checkbox"
-                                checked={(selectedPages[file.name] || []).includes(i)}
-                                onChange={(e) => handlePageSelect(file.name, i, e.target.checked)}
-                              />
-                              Seite {i + 1}
-                            </PageCheckbox>
-                          )
-                        )}
-                      </PageSelector>
-                    </PDFCard>
+                      {previews[file.name]?.type === 'pdf' && (
+                        <PageSelector theme={theme}>
+                          {Array.from(
+                            { length: previews[file.name].pageCount },
+                            (_, i) => (
+                              <PageCheckbox key={i} theme={theme}>
+                                <input
+                                  type="checkbox"
+                                  checked={(selectedPages[file.name] || []).includes(i)}
+                                  onChange={(e) => handlePageSelect(file.name, i, e.target.checked)}
+                                />
+                                Seite {i + 1}
+                              </PageCheckbox>
+                            )
+                          )}
+                        </PageSelector>
+                      )}
+                    </PreviewCard>
                   )}
                 </Draggable>
               ))}
               {provided.placeholder}
-            </PDFList>
+            </PreviewList>
           )}
         </Droppable>
       </DragDropContext>
