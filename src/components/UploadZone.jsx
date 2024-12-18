@@ -38,6 +38,10 @@ const DropZone = styled.div`
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  width: 90%; // Breiter als vorher
+  max-width: 1200px; // Maximale Breite
+  margin-left: auto;
+  margin-right: auto;
   
   &.drag-over {
     border-color: #eb003c;

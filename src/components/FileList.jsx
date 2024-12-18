@@ -3,6 +3,13 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 const List = styled.div`
   margin: 2rem 0;
+  width: 90%; // Breiter als vorher
+  max-width: 1200px; // Maximale Breite
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column; // Elemente untereinander
+  gap: 1rem; // Abstand zwischen Elementen
 `;
 
 const FileItem = styled.div`
@@ -11,7 +18,6 @@ const FileItem = styled.div`
     : 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'};
   padding: 1.2rem;
   border-radius: 10px;
-  margin-bottom: 0.8rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -51,6 +57,9 @@ const FileName = styled.span`
   font-weight: 500;
   font-size: 1rem;
   transition: color 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const FileSize = styled.span`

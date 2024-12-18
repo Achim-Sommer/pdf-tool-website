@@ -12,6 +12,10 @@ const PreviewContainer = styled.div`
   background: ${props => props.theme === 'dark' ? '#363636' : '#f8f9fa'};
   border-radius: 8px;
   transition: all 0.3s ease;
+  width: 90%; // Breiter als vorher
+  max-width: 1200px; // Maximale Breite
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 const PreviewTitle = styled.h3`
@@ -22,9 +26,10 @@ const PreviewTitle = styled.h3`
 
 const PDFList = styled.div`
   display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
+  flex-direction: row;
   gap: 1rem;
+  width: 100%;
+  overflow-x: auto;
   padding: 1rem;
   scroll-behavior: smooth;
 
@@ -45,7 +50,7 @@ const PDFList = styled.div`
 
 const PDFCard = styled.div`
   flex: 0 0 auto;
-  width: 200px;
+  width: 250px; // Etwas breiter
   background: ${props => props.theme === 'dark' ? '#2d2d2d' : 'white'};
   border-radius: 8px;
   padding: 1rem;
