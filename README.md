@@ -33,11 +33,62 @@ Eine moderne Web-Anwendung zum Zusammenfügen von PDF-Dateien, entwickelt mit Re
 - Emotion (Styled Components)
 - pdf-lib für PDF-Verarbeitung
 
+## 🔧 Technische Details
+
+### PDF & Bildverarbeitung
+
+- **Unterstützte Dateiformate**: 
+  - PDF
+  - PNG
+  - JPEG
+
+- **Bildkonvertierung**:
+  - Automatische Konvertierung von Bildern in PDF-Seiten
+  - Zentrierte Platzierung auf DIN A4-Seiten
+  - Proportionale Skalierung ohne Verzerrung
+
+- **Seitenauswahl**:
+  - Individuelle Seitenauswahl pro PDF-Datei
+  - Flexibles Zusammenfügen ausgewählter Seiten
+
+- **Technische Spezifikationen**:
+  - DIN A4 Standardformat: 595.28 x 841.89 Punkte
+  - Unterstützt Unicode und verschiedene Schriftarten
+  - Kompatibel mit PDF-Versionen 1.7 und höher
+
+### Performance
+
+- **Client-seitige Verarbeitung**:
+  - Verarbeitung direkt im Browser
+  - Keine Wartezeiten durch Serverübertragung
+  - Schnelle Zusammenführung von PDFs
+
+- **Ressourceneffizienz**:
+  - Minimaler Speicherbedarf
+  - Geringer CPU-Verbrauch
+  - Optimiert für moderne Browser
+
+### Browser-Kompatibilität
+
+- Unterstützt moderne Browser:
+  - Google Chrome (aktuellste Version)
+  - Mozilla Firefox (aktuellste Version)
+  - Microsoft Edge (aktuellste Version)
+  - Safari (aktuellste Version)
+  - Opera (aktuellste Version)
+
+- **Systemanforderungen**:
+  - Empfohlene Mindest-Browserversion: 
+    - Chrome 90+
+    - Firefox 88+
+    - Safari 14+
+    - Edge 90+
+
 ## 🚀 Installation
 
 1. Repository klonen:
 ```bash
-git clone https://github.com/[username]/pdf-tool-website.git
+git clone https://github.com/achim-sommer/pdf-tool-website.git
 cd pdf-tool-website
 ```
 
